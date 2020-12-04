@@ -9,6 +9,7 @@ require (
 	github.com/brocaar/chirpstack-api/go/v3 v3.8.1
 	github.com/brocaar/lorawan v0.0.0-20200712153947-7a20fad6a6ed
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
+	github.com/confluentinc/confluent-kafka-go v1.5.2 // indirect
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/eclipse/paho.mqtt.golang v1.2.0
@@ -57,6 +58,7 @@ require (
 	golang.org/x/tools v0.0.0-20191217033636-bbbf87ae2631
 	google.golang.org/genproto v0.0.0-20200218151345-dad8c97a84f5 // indirect
 	google.golang.org/grpc v1.28.0
+	gopkg.in/confluentinc/confluent-kafka-go.v1 v1.5.2 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 	gopkg.in/square/go-jose.v2 v2.5.1 // indirect
 )

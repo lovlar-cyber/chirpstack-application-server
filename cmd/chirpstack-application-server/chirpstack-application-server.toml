@@ -1,34 +1,22 @@
-package cmd
-
-import (
-	"os"
-	"text/template"
-
-	"github.com/brocaar/chirpstack-application-server/internal/config"
-	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
-)
-
-// when updating this template, don't forget to update config.md!
-const configTemplate = `[general]
+[general]
 # Log level
 #
 # debug=5, info=4, warning=3, error=2, fatal=1, panic=0
-log_level={{ .General.LogLevel }}
+log_level=5
 
 # Log to syslog.
 #
 # When set to true, log messages are being written to syslog.
-log_to_syslog={{ .General.LogToSyslog }}
+log_to_syslog=false
 
 # The number of times passwords must be hashed. A higher number is safer as
 # an attack takes more time to perform.
-password_hash_iterations={{ .General.PasswordHashIterations }}
+password_hash_iterations=100000
 
 # gRPC default resolver scheme.
 #
 # Set this to "dns" for enabling dns round-robin load balancing.
-grpc_default_resolver_scheme="{{ .General.GRPCDefaultResolverScheme }}"
+grpc_default_resolver_scheme="passthrough"
 
 
 # PostgreSQL settings.
@@ -61,7 +49,7 @@ grpc_default_resolver_scheme="{{ .General.GRPCDefaultResolverScheme }}"
 # * require - Always SSL (skip verification)
 # * verify-ca - Always SSL (verify that the certificate presented by the server was signed by a trusted CA)
 # * verify-full - Always SSL (verify that the certification presented by the server was signed by a trusted CA and the server host name matches the one in the certificate)
-dsn="{{ .PostgreSQL.DSN }}"
+dsn="postgres://localhost:5432/chirpstack_as?sslmode=disable&user=postgres&password=welcome123"
 
 # Automatically apply database migrations.
 #
@@ -70,19 +58,19 @@ dsn="{{ .PostgreSQL.DSN }}"
 # or let ChirpStack Application Server migrate to the latest state automatically, by using
 # this setting. Make sure that you always make a backup when upgrading Lora
 # App Server and / or applying migrations.
-automigrate={{ .PostgreSQL.Automigrate }}
+automigrate=true
 
 # Max open connections.
 #
 # This sets the max. number of open connections that are allowed in the
 # PostgreSQL connection pool (0 = unlimited).
-max_open_connections={{ .PostgreSQL.MaxOpenConnections }}
+max_open_connections=0
 
 # Max idle connections.
 #
 # This sets the max. number of idle connections in the PostgreSQL connection
 # pool (0 = no idle connections are retained).
-max_idle_connections={{ .PostgreSQL.MaxIdleConnections }}
+max_idle_connections=2
 
 
 # Redis settings
@@ -93,43 +81,43 @@ max_idle_connections={{ .PostgreSQL.MaxIdleConnections }}
 # Server address or addresses.
 #
 # Set multiple addresses when connecting to a cluster.
-servers=[{{ range $index, $elm := .Redis.Servers }}
-  "{{ $elm }}",{{ end }}
+servers=[
+  "localhost:6379",
 ]
 
 # Password.
 #
 # Set the password when connecting to Redis requires password authentication.
-password="{{ .Redis.Password }}"
+password=""
 
 # Database index.
 #
 # By default, this can be a number between 0-15.
-database={{ .Redis.Database }}
+database=0
 
 
 # Redis Cluster.
 #
 # Set this to true when the provided URLs are pointing to a Redis Cluster
 # instance.
-cluster={{ .Redis.Cluster }}
+cluster=false
 
 # Master name.
 #
 # Set the master name when the provided URLs are pointing to a Redis Sentinel
 # instance.
-master_name="{{ .Redis.MasterName }}"
+master_name=""
 
 # Connection pool size.
 #
 # Default (when set to 0) is 10 connections per every CPU.
-pool_size={{ .Redis.PoolSize }}
+pool_size=0
 
 # TLS enabled.
 #
 # Note: tis will enable TLS, but it will not validate the certificate
 # used by the server.
-tls_enabled={{ .Redis.TLSEnabled }}
+tls_enabled=false
 
 
 # Application-server settings.
@@ -139,7 +127,7 @@ tls_enabled={{ .Redis.TLSEnabled }}
 # Random UUID defining the id of the application-server installation (used by
 # ChirpStack Network Server as routing-profile id).
 # For now it is recommended to not change this id.
-id="{{ .ApplicationServer.ID }}"
+id="6d5db27e-4ce2-4b2b-b5d7-91f069397978"
 
 
   # User authentication
@@ -151,7 +139,7 @@ id="{{ .ApplicationServer.ID }}"
     # Enable OpenID Connect authentication.
     #
     # Enabling this option replaces password authentication.
-    enabled={{ .ApplicationServer.UserAuthentication.OpenIDConnect.Enabled }}
+    enabled=false
 
     # Registration enabled.
     #
@@ -162,7 +150,7 @@ id="{{ .ApplicationServer.ID }}"
     # The user will not be associated with any organization, but in order to
     # facilitate the automatic onboarding of users, it is possible to configure a
     # registration callback URL (next config option).
-    registration_enabled={{ .ApplicationServer.UserAuthentication.OpenIDConnect.RegistrationEnabled }}
+    registration_enabled=false
 
     # Registration callback URL.
     #
@@ -171,40 +159,40 @@ id="{{ .ApplicationServer.ID }}"
     # organization, ...
     # ChirpStack Application Server will make a HTTP POST call to this endpoint,
     # with the URL parameter user_id.
-    registration_callback_url="{{ .ApplicationServer.UserAuthentication.OpenIDConnect.RegistrationCallbackURL }}"
+    registration_callback_url=""
 
     # Provider URL.
     # This is the URL of the OpenID Connect provider.
-    provider_url="{{ .ApplicationServer.UserAuthentication.OpenIDConnect.ProviderURL }}"
+    provider_url=""
 
     # Client ID.
-    client_id="{{ .ApplicationServer.UserAuthentication.OpenIDConnect.ClientID }}"
+    client_id=""
 
     # Client secret.
-    client_secret="{{ .ApplicationServer.UserAuthentication.OpenIDConnect.ClientSecret }}"
+    client_secret=""
 
     # Redirect URL.
     #
     # This must contain the ChirpStack Application Server web-interface hostname
     # with '/auth/oidc/callback' path, e.g. https://example.com/auth/oidc/callback.
-    redirect_url="{{ .ApplicationServer.UserAuthentication.OpenIDConnect.RedirectURL }}"
+    redirect_url=""
 
     # Logout URL.
     #
     # When set, ChirpStack Application Server will redirect to this URL instead
     # of redirecting to the login page.
-    logout_url="{{ .ApplicationServer.UserAuthentication.OpenIDConnect.LogoutURL }}"
+    logout_url=""
 
     # Login label.
     #
     # The login label is used in the web-interface login form.
-    login_label="{{ .ApplicationServer.UserAuthentication.OpenIDConnect.LoginLabel }}"
+    login_label=""
 
 
   # JavaScript codec settings.
   [application_server.codec.js]
   # Maximum execution time.
-  max_execution_time="{{ .ApplicationServer.Codec.JS.MaxExecutionTime }}"
+  max_execution_time="100ms"
 
 
   # Integration configures the data integration.
@@ -219,7 +207,7 @@ id="{{ .ApplicationServer.ID }}"
   # * protobuf:  Protobuf encoding
   # * json:      JSON encoding (easier for debugging, but less compact than 'protobuf')
   # * json_v3:   v3 JSON (will be removed in the next major release)
-  marshaler="{{ .ApplicationServer.Integration.Marshaler }}"
+  marshaler="json_v3"
 
 
   # Enabled integrations.
@@ -236,36 +224,36 @@ id="{{ .ApplicationServer.ID }}"
   # * kafka             - Kafka distributed streaming platform
   # * confluent_kafka             - Kafka distributed streaming platform using confluent libraries
   # * postgresql        - PostgreSQL database
-  enabled=[{{ if .ApplicationServer.Integration.Enabled|len }}"{{ end }}{{ range $index, $elm := .ApplicationServer.Integration.Enabled }}{{ if $index }}", "{{ end }}{{ $elm }}{{ end }}{{ if .ApplicationServer.Integration.Enabled|len }}"{{ end }}]
+  enabled=["mqtt"]
 
 
   # MQTT integration backend.
   [application_server.integration.mqtt]
   # Event topic template.
-  event_topic_template="{{ .ApplicationServer.Integration.MQTT.EventTopicTemplate }}"
+  event_topic_template="application/{{ .ApplicationID }}/device/{{ .DevEUI }}/event/{{ .EventType }}"
 
   # Command topic template.
-  command_topic_template="{{ .ApplicationServer.Integration.MQTT.CommandTopicTemplate }}"
+  command_topic_template="application/{{ .ApplicationID }}/device/{{ .DevEUI }}/command/{{ .CommandType }}"
 
   # Retain events.
   #
   # The MQTT broker will store the last publised message, when retain events is set
   # to true. When a MQTT client connects and subscribes, it will always receive the
   # last published message.
-  retain_events={{ .ApplicationServer.Integration.MQTT.RetainEvents }}
+  retain_events=false
 
   # MQTT server (e.g. scheme://host:port where scheme is tcp, ssl or ws)
-  server="{{ .ApplicationServer.Integration.MQTT.Server }}"
+  server="tcp://test.mosquitto.org:1883"
 
   # Connect with the given username (optional)
-  username="{{ .ApplicationServer.Integration.MQTT.Username }}"
+  username=""
 
   # Connect with the given password (optional)
-  password="{{ .ApplicationServer.Integration.MQTT.Password }}"
+  password=""
 
   # Maximum interval that will be waited between reconnection attempts when connection is lost.
   # Valid units are 'ms', 's', 'm', 'h'. Note that these values can be combined, e.g. '24h30m15s'.
-  max_reconnect_interval="{{ .ApplicationServer.Integration.MQTT.MaxReconnectInterval }}"
+  max_reconnect_interval="1m0s"
 
   # Quality of service level
   #
@@ -275,34 +263,34 @@ id="{{ .ApplicationServer.ID }}"
   #
   # Note: an increase of this value will decrease the performance.
   # For more information: https://www.hivemq.com/blog/mqtt-essentials-part-6-mqtt-quality-of-service-levels
-  qos={{ .ApplicationServer.Integration.MQTT.QOS }}
+  qos=0
 
   # Clean session
   #
   # Set the "clean session" flag in the connect message when this client
   # connects to an MQTT broker. By setting this flag you are indicating
   # that no messages saved by the broker for this client should be delivered.
-  clean_session={{ .ApplicationServer.Integration.MQTT.CleanSession }}
+  clean_session=true
 
   # Client ID
   #
   # Set the client id to be used by this client when connecting to the MQTT
   # broker. A client id must be no longer than 23 characters. When left blank,
   # a random id will be generated. This requires clean_session=true.
-  client_id="{{ .ApplicationServer.Integration.MQTT.ClientID }}"
+  client_id=""
 
   # CA certificate file (optional)
   #
   # Use this when setting up a secure connection (when server uses ssl://...)
   # but the certificate used by the server is not trusted by any CA certificate
   # on the server (e.g. when self generated).
-  ca_cert="{{ .ApplicationServer.Integration.MQTT.CACert }}"
+  ca_cert=""
 
   # TLS certificate file (optional)
-  tls_cert="{{ .ApplicationServer.Integration.MQTT.TLSCert }}"
+  tls_cert=""
 
   # TLS key file (optional)
-  tls_key="{{ .ApplicationServer.Integration.MQTT.TLSKey }}"
+  tls_key=""
 
 
   # AMQP / RabbitMQ.
@@ -311,13 +299,13 @@ id="{{ .ApplicationServer.ID }}"
   #
   # See for a specification of all the possible options:
   # https://www.rabbitmq.com/uri-spec.html
-  url="{{ .ApplicationServer.Integration.AMQP.URL }}"
+  url="amqp://guest:guest@localhost:5672"
 
   # Event routing key template.
   #
   # This is the event routing-key template used when publishing device
   # events.
-  event_routing_key_template="{{ .ApplicationServer.Integration.AMQP.EventRoutingKeyTemplate }}"
+  event_routing_key_template="application.{{ .ApplicationID }}.device.{{ .DevEUI }}.event.{{ .EventType }}"
 
 
   # AWS Simple Notification Service (SNS)
@@ -326,16 +314,16 @@ id="{{ .ApplicationServer.ID }}"
   #
   # Example: "eu-west-1".
   # See also: https://docs.aws.amazon.com/general/latest/gr/rande.html.
-  aws_region="{{ .ApplicationServer.Integration.AWSSNS.AWSRegion }}"
+  aws_region=""
 
   # AWS Access Key ID.
-  aws_access_key_id="{{ .ApplicationServer.Integration.AWSSNS.AWSAccessKeyID }}"
+  aws_access_key_id=""
 
   # AWS Secret Access Key.
-  aws_secret_access_key="{{ .ApplicationServer.Integration.AWSSNS.AWSSecretAccessKey }}"
+  aws_secret_access_key=""
 
   # Topic ARN (SNS).
-  topic_arn="{{ .ApplicationServer.Integration.AWSSNS.TopicARN }}"
+  topic_arn=""
 
 
   # Azure Service-Bus integration.
@@ -344,17 +332,17 @@ id="{{ .ApplicationServer.ID }}"
   #
   # The connection string can be found / created in the Azure console under
   # Settings -> Shared access policies. The policy must contain Manage & Send.
-  connection_string="{{ .ApplicationServer.Integration.AzureServiceBus.ConnectionString }}"
+  connection_string=""
 
   # Publish mode.
   #
   # Select either "topic", or "queue".
-  publish_mode="{{ .ApplicationServer.Integration.AzureServiceBus.PublishMode }}"
+  publish_mode=""
 
   # Publish name.
   #
   # The name of the topic or queue.
-  publish_name="{{ .ApplicationServer.Integration.AzureServiceBus.PublishName }}"
+  publish_name=""
 
 
   # Google Cloud Pub/Sub integration.
@@ -363,27 +351,27 @@ id="{{ .ApplicationServer.ID }}"
   #
   # Note: this service-account must have the following Pub/Sub roles:
   #  * Pub/Sub Editor
-  credentials_file="{{ .ApplicationServer.Integration.GCPPubSub.CredentialsFile }}"
+  credentials_file=""
 
   # Google Cloud project id.
-  project_id="{{ .ApplicationServer.Integration.GCPPubSub.ProjectID }}"
+  project_id=""
 
   # Pub/Sub topic name.
-  topic_name="{{ .ApplicationServer.Integration.GCPPubSub.TopicName }}"
+  topic_name=""
 
 
   # Kafka integration.
   [application_server.integration.kafka]
   # Brokers, e.g.: localhost:9092.
-  brokers=[{{ range $index, $broker := .ApplicationServer.Integration.Kafka.Brokers }}{{ if $index }}, {{ end }}"{{ $broker }}"{{ end }}]
+  brokers=["localhost:9092"]
 
   # TLS.
   #
   # Set this to true when the Kafka client must connect using TLS to the Broker.
-  tls={{ .ApplicationServer.Integration.Kafka.TLS }}
+  tls=false
 
   # Topic for events.
-  topic="{{ .ApplicationServer.Integration.Kafka.Topic }}"
+  topic="chirpstack_as"
 
   # Template for keys included in Kafka messages. If empty, no key is included.
   # Kafka uses the key for distributing messages over partitions. You can use
@@ -391,33 +379,33 @@ id="{{ .ApplicationServer.ID }}"
   # they can be consumed in-order. And Kafka can use the key for data retention
   # decisions.  A header "event" with the event type is included in each
   # message. There is no need to parse it from the key.
-  event_key_template="{{ .ApplicationServer.Integration.Kafka.EventKeyTemplate }}"
+  event_key_template="application.{{ .ApplicationID }}.device.{{ .DevEUI }}.event.{{ .EventType }}"
 
   # Username (optional).
-  username="{{ .ApplicationServer.Integration.Kafka.Username }}"
+  username=""
 
   # Password (optional).
-  password="{{ .ApplicationServer.Integration.Kafka.Password }}"
+  password=""
 
   # One of plain or scram
-  mechanism="{{ .ApplicationServer.Integration.Kafka.Mechanism }}"
+  mechanism="plain"
   
   # Only used if mechanism == scram.
   # SHA-256 or SHA-512 
-  algorithm="{{ .ApplicationServer.Integration.Kafka.Algorithm }}"
+  algorithm="SHA-512"
 
   # Confluent Kafka integration.
   [application_server.integration.confluent_kafka]
   # Brokers, e.g.: localhost:9092.
-  brokers=[{{ range $index, $broker := .ApplicationServer.Integration.Kafka.Brokers }}{{ if $index }}, {{ end }}"{{ $broker }}"{{ end }}]
+  brokers=["localhost:9092"]
 
   # TLS.
   #
   # Set this to true when the Kafka client must connect using TLS to the Broker.
-  tls={{ .ApplicationServer.Integration.Kafka.TLS }}
+  tls=false
 
   # Topic for events.
-  topic="{{ .ApplicationServer.Integration.Kafka.Topic }}"
+  topic="chirpstack_as"
 
   # Template for keys included in Kafka messages. If empty, no key is included.
   # Kafka uses the key for distributing messages over partitions. You can use
@@ -425,36 +413,36 @@ id="{{ .ApplicationServer.ID }}"
   # they can be consumed in-order. And Kafka can use the key for data retention
   # decisions.  A header "event" with the event type is included in each
   # message. There is no need to parse it from the key.
-  event_key_template="{{ .ApplicationServer.Integration.Kafka.EventKeyTemplate }}"
+  event_key_template="application.{{ .ApplicationID }}.device.{{ .DevEUI }}.event.{{ .EventType }}"
 
   # Username (optional).
-  username="{{ .ApplicationServer.Integration.Kafka.Username }}"
+  username=""
 
   # Password (optional).
-  password="{{ .ApplicationServer.Integration.Kafka.Password }}"
+  password=""
 
   # One of plain or scram
-  mechanism="{{ .ApplicationServer.Integration.Kafka.Mechanism }}"
+  mechanism="plain"
   
   # Only used if mechanism == scram.
   # SHA-256 or SHA-512 
-  algorithm="{{ .ApplicationServer.Integration.Kafka.Algorithm }}"
+  algorithm="SHA-512"
 
 
   # PostgreSQL database integration.
   [application_server.integration.postgresql]
   # PostgreSQL dsn (e.g.: postgres://user:password@hostname/database?sslmode=disable).
-  dsn="{{ .ApplicationServer.Integration.PostgreSQL.DSN }}"
+  dsn=""
 
   # This sets the max. number of open connections that are allowed in the
   # PostgreSQL connection pool (0 = unlimited).
-  max_open_connections={{ .ApplicationServer.Integration.PostgreSQL.MaxOpenConnections }}
+  max_open_connections=0
 
   # Max idle connections.
   #
   # This sets the max. number of idle connections in the PostgreSQL connection
   # pool (0 = no idle connections are retained).
-  max_idle_connections={{ .ApplicationServer.Integration.PostgreSQL.MaxIdleConnections }}
+  max_idle_connections=2
 
 
   # Settings for the "internal api"
@@ -463,16 +451,16 @@ id="{{ .ApplicationServer.ID }}"
   # and should not be exposed to the end-user.
   [application_server.api]
   # ip:port to bind the api server
-  bind="{{ .ApplicationServer.API.Bind }}"
+  bind="0.0.0.0:8001"
 
   # ca certificate used by the api server (optional)
-  ca_cert="{{ .ApplicationServer.API.CACert }}"
+  ca_cert=""
 
   # tls certificate used by the api server (optional)
-  tls_cert="{{ .ApplicationServer.API.TLSCert }}"
+  tls_cert=""
 
   # tls key used by the api server (optional)
-  tls_key="{{ .ApplicationServer.API.TLSKey }}"
+  tls_key=""
 
   # Public ip:port of the application-server API.
   #
@@ -481,7 +469,7 @@ id="{{ .ApplicationServer.ID }}"
   # this to the host:ip on which ChirpStack Network Server can reach ChirpStack Application Server.
   # The port must be equal to the port configured by the 'bind' flag
   # above.
-  public_host="{{ .ApplicationServer.API.PublicHost }}"
+  public_host="localhost:8001"
 
 
   # Settings for the "external api"
@@ -489,59 +477,50 @@ id="{{ .ApplicationServer.ID }}"
   # This is the API and web-interface exposed to the end-user.
   [application_server.external_api]
   # ip:port to bind the (user facing) http server to (web-interface and REST / gRPC api)
-  bind="{{ .ApplicationServer.ExternalAPI.Bind }}"
+  bind="0.0.0.0:8080"
 
   # http server TLS certificate (optional)
-  tls_cert="{{ .ApplicationServer.ExternalAPI.TLSCert }}"
+  tls_cert=""
 
   # http server TLS key (optional)
-  tls_key="{{ .ApplicationServer.ExternalAPI.TLSKey }}"
+  tls_key=""
 
   # JWT secret used for api authentication / authorization
   # You could generate this by executing 'openssl rand -base64 32' for example
-  jwt_secret="{{ .ApplicationServer.ExternalAPI.JWTSecret }}"
+  jwt_secret="1234"
 
   # Allow origin header (CORS).
   #
   # Set this to allows cross-domain communication from the browser (CORS).
   # Example value: https://example.com.
   # When left blank (default), CORS will not be used.
-  cors_allow_origin="{{ .ApplicationServer.ExternalAPI.CORSAllowOrigin }}"
+  cors_allow_origin=""
 
 
   # Settings for the remote multicast setup.
   [application_server.remote_multicast_setup]
   # Synchronization interval.
-  sync_interval="{{ .ApplicationServer.RemoteMulticastSetup.SyncInterval }}"
+  sync_interval="1s"
 
   # Synchronization retries.
-  sync_retries={{ .ApplicationServer.RemoteMulticastSetup.SyncRetries }}
+  sync_retries=3
 
   # Synchronization batch-size.
-  sync_batch_size={{ .ApplicationServer.RemoteMulticastSetup.SyncBatchSize }}
+  sync_batch_size=100
 
 
   # Settings for the fragmentation-session setup.
   [application_server.fragmentation_session]
   # Synchronization interval.
-  sync_interval="{{ .ApplicationServer.FragmentationSession.SyncInterval }}"
+  sync_interval="1s"
 
   # Synchronization retries.
-  sync_retries={{ .ApplicationServer.FragmentationSession.SyncRetries }}
+  sync_retries=3
 
   # Synchronization batch-size.
-  sync_batch_size={{ .ApplicationServer.FragmentationSession.SyncBatchSize }}
+  sync_batch_size=100
 
-{{ if ne .ApplicationServer.Branding.Footer  "" }}
-  # Branding configuration.
-  [application_server.branding]
-  # Footer
-  footer="{{ .ApplicationServer.Branding.Footer }}"
 
-  # Registration.
-  registration="{{ .ApplicationServer.Branding.Registration }}"
-
-{{ end }}
 
 # Join-server configuration.
 #
@@ -550,23 +529,23 @@ id="{{ .ApplicationServer.ID }}"
 # to handle join-requests.
 [join_server]
 # ip:port to bind the join-server api interface to
-bind="{{ .JoinServer.Bind }}"
+bind="0.0.0.0:8003"
 
 # CA certificate (optional).
 #
 # When set, the server requires a client-certificate and will validate this
 # certificate on incoming requests.
-ca_cert="{{ .JoinServer.CACert }}"
+ca_cert=""
 
 # TLS server-certificate (optional).
 #
 # Set this to enable TLS.
-tls_cert="{{ .JoinServer.TLSCert }}"
+tls_cert=""
 
 # TLS server-certificate key (optional).
 #
 # Set this to enable TLS.
-tls_key="{{ .JoinServer.TLSKey }}"
+tls_key=""
 
 
 # Key Encryption Key (KEK) configuration.
@@ -591,7 +570,7 @@ tls_key="{{ .JoinServer.TLSKey }}"
   #
   # When left blank, the AppSKey will be sent unencrypted (which can be fine
   # for private networks).
-  as_kek_label="{{ .JoinServer.KEK.ASKEKLabel }}"
+  as_kek_label=""
 
   # KEK set.
   #
@@ -602,11 +581,7 @@ tls_key="{{ .JoinServer.TLSKey }}"
 
   # # Key Encryption Key.
   # kek="01020304050607080102030405060708"
-{{ range $index, $element := .JoinServer.KEK.Set }}
-  [[join_server.kek.set]]
-  label="{{ $element.Label }}"
-  kek="{{ $element.KEK }}"
-{{ end }}
+
 
 # Metrics collection settings.
 [metrics]
@@ -615,7 +590,7 @@ tls_key="{{ .JoinServer.TLSKey }}"
 # The timezone is used for correctly aggregating the metrics (e.g. per hour,
 # day or month).
 # Example: "Europe/Amsterdam" or "Local" for the the system's local time zone.
-timezone="{{ .Metrics.Timezone }}"
+timezone="Local"
 
   # Metrics stored in Redis.
   #
@@ -626,13 +601,13 @@ timezone="{{ .Metrics.Timezone }}"
   #
   # The intervals on which to aggregate. Available options are:
   # 'MINUTE', 'HOUR', 'DAY', 'MONTH'.
-  aggregation_intervals=[{{ if .Metrics.Redis.AggregationIntervals|len }}"{{ end }}{{ range $index, $elm := .Metrics.Redis.AggregationIntervals }}{{ if $index }}", "{{ end }}{{ $elm }}{{ end }}{{ if .Metrics.Redis.AggregationIntervals|len }}"{{ end }}]
+  aggregation_intervals=["MINUTE", "HOUR", "DAY", "MONTH"]
 
   # Aggregated statistics storage duration.
-  minute_aggregation_ttl="{{ .Metrics.Redis.MinuteAggregationTTL }}"
-  hour_aggregation_ttl="{{ .Metrics.Redis.HourAggregationTTL }}"
-  day_aggregation_ttl="{{ .Metrics.Redis.DayAggregationTTL }}"
-  month_aggregation_ttl="{{ .Metrics.Redis.MonthAggregationTTL }}"
+  minute_aggregation_ttl="2h0m0s"
+  hour_aggregation_ttl="48h0m0s"
+  day_aggregation_ttl="2160h0m0s"
+  month_aggregation_ttl="17520h0m0s"
 
 
   # Metrics stored in Prometheus.
@@ -641,17 +616,17 @@ timezone="{{ .Metrics.Timezone }}"
   # instance.
   [metrics.prometheus]
   # Enable Prometheus metrics endpoint.
-  endpoint_enabled={{ .Metrics.Prometheus.EndpointEnabled }}
+  endpoint_enabled=false
 
   # The ip:port to bind the Prometheus metrics server to for serving the
   # metrics endpoint.
-  bind="{{ .Metrics.Prometheus.Bind }}"
+  bind=""
 
   # API timing histogram.
   #
   # By setting this to true, the API request timing histogram will be enabled.
   # See also: https://github.com/grpc-ecosystem/go-grpc-prometheus#histograms
-  api_timing_histogram={{ .Metrics.Prometheus.APITimingHistogram }}
+  api_timing_histogram=false
 
 
   # Monitoring settings.
@@ -664,18 +639,18 @@ timezone="{{ .Metrics.Timezone }}"
   # IP:port to bind the monitoring endpoint to.
   #
   # When left blank, the monitoring endpoint will be disabled.
-  bind="{{ .Monitoring.Bind }}"
+  bind=""
 
   # Prometheus metrics endpoint.
   #
   # When set to true, Prometheus metrics will be served at '/metrics'.
-  prometheus_endpoint={{ .Monitoring.PrometheusEndpoint }}
+  prometheus_endpoint=false
 
   # Prometheus API timing histogram.
   #
   # By setting this to true, the API request timing histogram will be enabled.
   # See also: https://github.com/grpc-ecosystem/go-grpc-prometheus#histograms
-  prometheus_api_timing_histogram={{ .Monitoring.PrometheusAPITimingHistogram }}
+  prometheus_api_timing_histogram=false
 
   # Health check endpoint.
   #
@@ -684,18 +659,4 @@ timezone="{{ .Metrics.Timezone }}"
   # determine the health of this service:
   #   * Ping PostgreSQL database
   #   * Ping Redis database
-  healthcheck_endpoint={{ .Monitoring.HealthcheckEndpoint }}
-`
-
-var configCmd = &cobra.Command{
-	Use:   "configfile",
-	Short: "Print the LoRa Application Server configuration file",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		t := template.Must(template.New("config").Parse(configTemplate))
-		err := t.Execute(os.Stdout, config.C)
-		if err != nil {
-			return errors.Wrap(err, "execute config template error")
-		}
-		return nil
-	},
-}
+  healthcheck_endpoint=false

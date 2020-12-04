@@ -55,16 +55,17 @@ type Config struct {
 		} `mapstructure:"codec"`
 
 		Integration struct {
-			Marshaler       string                      `mapstructure:"marshaler"`
-			Backend         string                      `mapstructure:"backend"` // deprecated
-			Enabled         []string                    `mapstructure:"enabled"`
-			AWSSNS          IntegrationAWSSNSConfig     `mapstructure:"aws_sns"`
-			AzureServiceBus IntegrationAzureConfig      `mapstructure:"azure_service_bus"`
-			MQTT            IntegrationMQTTConfig       `mapstructure:"mqtt"`
-			GCPPubSub       IntegrationGCPConfig        `mapstructure:"gcp_pub_sub"`
-			Kafka           IntegrationKafkaConfig      `mapstructure:"kafka"`
-			PostgreSQL      IntegrationPostgreSQLConfig `mapstructure:"postgresql"`
-			AMQP            IntegrationAMQPConfig       `mapstructure:"amqp"`
+			Marshaler       string                          `mapstructure:"marshaler"`
+			Backend         string                          `mapstructure:"backend"` // deprecated
+			Enabled         []string                        `mapstructure:"enabled"`
+			AWSSNS          IntegrationAWSSNSConfig         `mapstructure:"aws_sns"`
+			AzureServiceBus IntegrationAzureConfig          `mapstructure:"azure_service_bus"`
+			MQTT            IntegrationMQTTConfig           `mapstructure:"mqtt"`
+			GCPPubSub       IntegrationGCPConfig            `mapstructure:"gcp_pub_sub"`
+			Kafka           IntegrationKafkaConfig          `mapstructure:"kafka"`
+			ConfluentKafka  IntegrationConfluentKafkaConfig `mapstructure:"confluent_kafka"`
+			PostgreSQL      IntegrationPostgreSQLConfig     `mapstructure:"postgresql"`
+			AMQP            IntegrationAMQPConfig           `mapstructure:"amqp"`
 		} `mapstructure:"integration"`
 
 		API struct {
@@ -223,6 +224,18 @@ type IntegrationAMQPConfig struct {
 
 // IntegrationKafkaConfig holds the Kafka integration configuration.
 type IntegrationKafkaConfig struct {
+	Brokers          []string `mapstructure:"brokers"`
+	TLS              bool     `mapstructure:"tls"`
+	Topic            string   `mapstructure:"topic"`
+	EventKeyTemplate string   `mapstructure:"event_key_template"`
+	Username         string   `mapstructure:"username"`
+	Password         string   `mapstructure:"password"`
+	Mechanism        string   `mapstructure:"mechanism"`
+	Algorithm        string   `mapstructure:"algorithm"`
+}
+
+// IntegrationConfluentKafkaConfig holds the Kafka integration configuration.
+type IntegrationConfluentKafkaConfig struct {
 	Brokers          []string `mapstructure:"brokers"`
 	TLS              bool     `mapstructure:"tls"`
 	Topic            string   `mapstructure:"topic"`
