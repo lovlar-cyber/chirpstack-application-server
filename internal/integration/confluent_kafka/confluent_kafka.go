@@ -148,7 +148,8 @@ func (i *Integration) publish(ctx context.Context, applicationID uint64, devEUIB
 	key := keyBuf.Bytes()
 
 	kmsg := kafka.Message{
-		Value: b,
+		TopicPartition: kafka.TopicPartition{Topic: &i.config.Topic, Partition: kafka.PartitionAny},
+		Value:          b,
 		Headers: []kafka.Header{
 			{
 				Key:   "event",

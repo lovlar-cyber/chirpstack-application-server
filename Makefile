@@ -82,4 +82,4 @@ ui-requirements:
 
 serve: build
 	@echo "Starting ChirpStack Application Server"
-	./build/chirpstack-application-server
+	./build/chirpstack-application-server -c cmd/chirpstack-application-server/chirpstack-application-server.toml
