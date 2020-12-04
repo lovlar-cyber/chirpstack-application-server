@@ -33,7 +33,7 @@ func (ts *IntegrationTestSuite) SetupSuite() {
 	ts.applicationID = 10
 	ts.devEUI = lorawan.EUI64{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08}
 
-	kafkaConf := conf.ApplicationServer.Integration.Kafka
+	kafkaConf := conf.ApplicationServer.Integration.ConfluentKafka
 
 	// Note: We instantiate a reader before we instantiate the integration. An
 	// integration immediately creates a writer. If kafka was just started for the

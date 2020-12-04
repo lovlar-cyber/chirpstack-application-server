@@ -58,7 +58,7 @@ require (
 	golang.org/x/tools v0.0.0-20191217033636-bbbf87ae2631
 	google.golang.org/genproto v0.0.0-20200218151345-dad8c97a84f5 // indirect
 	google.golang.org/grpc v1.28.0
-	gopkg.in/confluentinc/confluent-kafka-go.v1 v1.5.2 // indirect
+	gopkg.in/confluentinc/confluent-kafka-go.v1 v1.5.2
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 	gopkg.in/square/go-jose.v2 v2.5.1 // indirect
 )

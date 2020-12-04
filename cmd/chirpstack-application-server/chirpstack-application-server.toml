@@ -2,7 +2,7 @@
 # Log level
 #
 # debug=5, info=4, warning=3, error=2, fatal=1, panic=0
-log_level=5
+log_level=4
 
 # Log to syslog.
 #
@@ -224,7 +224,7 @@ id="6d5db27e-4ce2-4b2b-b5d7-91f069397978"
   # * kafka             - Kafka distributed streaming platform
   # * confluent_kafka             - Kafka distributed streaming platform using confluent libraries
   # * postgresql        - PostgreSQL database
-  enabled=["mqtt"]
+  enabled=["confluent_kafka"]
 
 
   # MQTT integration backend.
@@ -422,7 +422,7 @@ id="6d5db27e-4ce2-4b2b-b5d7-91f069397978"
   password=""
 
   # One of plain or scram
-  mechanism="plain"
+  mechanism="PLAINTEXT"
   
   # Only used if mechanism == scram.
   # SHA-256 or SHA-512 

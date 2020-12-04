@@ -409,15 +409,15 @@ id="{{ .ApplicationServer.ID }}"
   # Confluent Kafka integration.
   [application_server.integration.confluent_kafka]
   # Brokers, e.g.: localhost:9092.
-  brokers=[{{ range $index, $broker := .ApplicationServer.Integration.Kafka.Brokers }}{{ if $index }}, {{ end }}"{{ $broker }}"{{ end }}]
+  brokers=[{{ range $index, $broker := .ApplicationServer.Integration.ConfluentKafka.Brokers }}{{ if $index }}, {{ end }}"{{ $broker }}"{{ end }}]
 
   # TLS.
   #
   # Set this to true when the Kafka client must connect using TLS to the Broker.
-  tls={{ .ApplicationServer.Integration.Kafka.TLS }}
+  tls={{ .ApplicationServer.Integration.ConfluentKafka.TLS }}
 
   # Topic for events.
-  topic="{{ .ApplicationServer.Integration.Kafka.Topic }}"
+  topic="{{ .ApplicationServer.Integration.ConfluentKafka.Topic }}"
 
   # Template for keys included in Kafka messages. If empty, no key is included.
   # Kafka uses the key for distributing messages over partitions. You can use
@@ -425,20 +425,20 @@ id="{{ .ApplicationServer.ID }}"
   # they can be consumed in-order. And Kafka can use the key for data retention
   # decisions.  A header "event" with the event type is included in each
   # message. There is no need to parse it from the key.
-  event_key_template="{{ .ApplicationServer.Integration.Kafka.EventKeyTemplate }}"
+  event_key_template="{{ .ApplicationServer.Integration.ConfluentKafka.EventKeyTemplate }}"
 
   # Username (optional).
-  username="{{ .ApplicationServer.Integration.Kafka.Username }}"
+  username="{{ .ApplicationServer.Integration.ConfluentKafka.Username }}"
 
   # Password (optional).
-  password="{{ .ApplicationServer.Integration.Kafka.Password }}"
+  password="{{ .ApplicationServer.Integration.ConfluentKafka.Password }}"
 
   # One of plain or scram
-  mechanism="{{ .ApplicationServer.Integration.Kafka.Mechanism }}"
+  mechanism="{{ .ApplicationServer.Integration.ConfluentKafka.Mechanism }}"
   
   # Only used if mechanism == scram.
   # SHA-256 or SHA-512 
-  algorithm="{{ .ApplicationServer.Integration.Kafka.Algorithm }}"
+  algorithm="{{ .ApplicationServer.Integration.ConfluentKafka.Algorithm }}"
 
 
   # PostgreSQL database integration.

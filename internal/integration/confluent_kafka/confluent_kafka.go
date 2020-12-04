@@ -3,18 +3,14 @@ package confluent_kafka
 import (
 	"bytes"
 	"context"
-	"crypto/tls"
 	"fmt"
 	"text/template"
-	"time"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/segmentio/kafka-go"
-	"github.com/segmentio/kafka-go/sasl/plain"
-	"github.com/segmentio/kafka-go/sasl/scram"
+	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 
 	pb "github.com/brocaar/chirpstack-api/go/v3/as/integration"
 	"github.com/brocaar/chirpstack-application-server/internal/config"
@@ -24,59 +20,38 @@ import (
 	"github.com/brocaar/lorawan"
 )
 
-// Integration implements an Kafka integration.
+// Integration implements an Confluent Kafka integration.
 type Integration struct {
 	marshaler        marshaler.Type
-	writer           *kafka.Writer
+	writer           *kafka.Producer
 	eventKeyTemplate *template.Template
 	config           config.IntegrationConfluentKafkaConfig
 }
 
 // New creates a new Kafka integration.
 func New(m marshaler.Type, conf config.IntegrationConfluentKafkaConfig) (*Integration, error) {
-	wc := kafka.WriterConfig{
-		Brokers:  conf.Brokers,
-		Topic:    conf.Topic,
-		Balancer: &kafka.LeastBytes{},
-
-		// Equal to kafka.DefaultDialer.
-		// We do not want to use kafka.DefaultDialer itself, as we might modify
-		// it below to setup SASLMechanism.
-		Dialer: &kafka.Dialer{
-			Timeout:   10 * time.Second,
-			DualStack: true,
-		},
+	wc := kafka.ConfigMap{
+		"bootstrap.servers": conf.Brokers,
+		"security.protocol": conf.Mechanism,
 	}
 
-	if conf.TLS {
-		wc.Dialer.TLS = &tls.Config{}
-	}
+	// add tls config here
+	//if conf.TLS {
+	//wc.Set(
+	//}
 
 	if conf.Username != "" || conf.Password != "" {
 		switch conf.Mechanism {
-		case "plain":
-			wc.Dialer.SASLMechanism = plain.Mechanism{
-				Username: conf.Username,
-				Password: conf.Password,
-			}
-		case "scram":
-			var algorithm scram.Algorithm
+		case "sasl":
+			wc.Set("sasl.mechanisms=SASL_SSL")
+			// +++ and other sasl configuration goes below
 
-			switch conf.Algorithm {
-			case "SHA-512":
-				algorithm = scram.SHA512
-			case "SHA-256":
-				algorithm = scram.SHA256
-			default:
-				return nil, fmt.Errorf("unknown sasl algorithm %s", conf.Algorithm)
-			}
+			// +++
+		case "ssl":
+			wc.Set("sasl.mechanisms=SSL")
+			// +++ and other ssl configuration goes below
 
-			mechanism, err := scram.Mechanism(algorithm, conf.Username, conf.Password)
-			if err != nil {
-				return nil, errors.Wrap(err, "sasl mechanism")
-			}
-
-			wc.Dialer.SASLMechanism = mechanism
+			// +++
 		default:
 			return nil, fmt.Errorf("unknown sasl mechanism %s", conf.Mechanism)
 		}
@@ -86,11 +61,11 @@ func New(m marshaler.Type, conf config.IntegrationConfluentKafkaConfig) (*Integr
 	log.WithFields(log.Fields{
 		"brokers": conf.Brokers,
 		"topic":   conf.Topic,
-	}).Info("integration/kafka: connecting to kafka broker(s)")
+	}).Info("integration/confluent_kafka: connecting to kafka broker(s)")
 
-	w := kafka.NewWriter(wc)
+	w, err := kafka.NewProducer(&wc)
 
-	log.Info("integration/kafka: connected to kafka broker(s)")
+	log.Info("integration/confluent_kafka: connected to kafka broker(s)")
 
 	kt, err := template.New("key").Parse(conf.EventKeyTemplate)
 	if err != nil {
@@ -154,6 +129,8 @@ func (i *Integration) publish(ctx context.Context, applicationID uint64, devEUIB
 	var devEUI lorawan.EUI64
 	copy(devEUI[:], devEUIB)
 
+	deliveryChan := make(chan kafka.Event)
+
 	b, err := marshaler.Marshal(i.marshaler, msg)
 	if err != nil {
 		return err
@@ -186,11 +163,22 @@ func (i *Integration) publish(ctx context.Context, applicationID uint64, devEUIB
 	log.WithFields(log.Fields{
 		"key":    string(key),
 		"ctx_id": ctx.Value(logging.ContextIDKey),
-	}).Info("integration/kafka: publishing message")
+	}).Info("integration/confluent_kafka: publishing message")
 
-	if err := i.writer.WriteMessages(ctx, kmsg); err != nil {
+	if err := i.writer.Produce(&kmsg, deliveryChan); err != nil {
 		return errors.Wrap(err, "writing message to kafka")
 	}
+
+	e := <-deliveryChan
+	m := e.(*kafka.Message)
+	if m.TopicPartition.Error != nil {
+		log.Println("Delivery failed: %v\n", m.TopicPartition.Error)
+	} else {
+		log.Println("Delivered message to topic %s [%d] at offset %v\n",
+			*m.TopicPartition.Topic, m.TopicPartition.Partition, m.TopicPartition.Offset)
+	}
+	close(deliveryChan)
+
 	return nil
 }
 
@@ -204,7 +192,7 @@ func (i *Integration) Close() error {
 	if i.writer == nil {
 		return fmt.Errorf("integration already closed")
 	}
-	err := i.writer.Close()
+	i.writer.Close()
 	i.writer = nil
-	return err
+	return nil
 }
