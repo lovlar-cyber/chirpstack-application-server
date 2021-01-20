@@ -23,14 +23,14 @@ import (
 // Integration implements an Confluent Kafka integration.
 type Integration struct {
 	marshaler        marshaler.Type
-	writer           *kafka.Producer
+	writer           *confluent_kafka.Producer
 	eventKeyTemplate *template.Template
 	config           config.IntegrationConfluentKafkaConfig
 }
 
 // New creates a new Kafka integration.
 func New(m marshaler.Type, conf config.IntegrationConfluentKafkaConfig) (*Integration, error) {
-	wc := kafka.ConfigMap{
+	wc := confluent_kafka.ConfigMap{
 		"bootstrap.servers": conf.Brokers,
 		"security.protocol": conf.Mechanism,
 	}
@@ -63,7 +63,7 @@ func New(m marshaler.Type, conf config.IntegrationConfluentKafkaConfig) (*Integr
 		"topic":   conf.Topic,
 	}).Info("integration/confluent_kafka: connecting to kafka broker(s)")
 
-	w, err := kafka.NewProducer(&wc)
+	w, err := confluent_kafka.NewProducer(&wc)
 
 	log.Info("integration/confluent_kafka: connected to kafka broker(s)")
 
@@ -129,7 +129,7 @@ func (i *Integration) publish(ctx context.Context, applicationID uint64, devEUIB
 	var devEUI lorawan.EUI64
 	copy(devEUI[:], devEUIB)
 
-	deliveryChan := make(chan kafka.Event)
+	deliveryChan := make(chan confluent_kafka.Event)
 
 	b, err := marshaler.Marshal(i.marshaler, msg)
 	if err != nil {
@@ -147,10 +147,10 @@ func (i *Integration) publish(ctx context.Context, applicationID uint64, devEUIB
 	}
 	key := keyBuf.Bytes()
 
-	kmsg := kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &i.config.Topic, Partition: kafka.PartitionAny},
+	kmsg := confluent_kafka.Message{
+		TopicPartition: confluent_kafka.TopicPartition{Topic: &i.config.Topic, Partition: confluent_kafka.PartitionAny},
 		Value:          b,
-		Headers: []kafka.Header{
+		Headers: []confluent_kafka.Header{
 			{
 				Key:   "event",
 				Value: []byte(event),
@@ -171,7 +171,7 @@ func (i *Integration) publish(ctx context.Context, applicationID uint64, devEUIB
 	}
 
 	e := <-deliveryChan
-	m := e.(*kafka.Message)
+	m := e.(*confluent_kafka.Message)
 	if m.TopicPartition.Error != nil {
 		log.Println("Delivery failed: %v\n", m.TopicPartition.Error)
 	} else {
