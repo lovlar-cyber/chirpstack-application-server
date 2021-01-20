@@ -23,7 +23,7 @@ import (
 // Integration implements an Confluent Kafka integration.
 type Integration struct {
 	marshaler        marshaler.Type
-	writer           *confluent_kafka.Producer
+	writer           *confluent_kafka.Producer //confluent_kafka instead of kafka
 	eventKeyTemplate *template.Template
 	config           config.IntegrationConfluentKafkaConfig
 }
