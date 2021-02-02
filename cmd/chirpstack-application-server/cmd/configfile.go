@@ -234,7 +234,7 @@ id="{{ .ApplicationServer.ID }}"
   # * azure_service_bus - Azure Service-Bus
   # * gcp_pub_sub       - Google Cloud Pub/Sub
   # * kafka             - Kafka distributed streaming platform
-  # * confluent_kafka             - Kafka distributed streaming platform using confluent libraries
+  # * confluent_kafka   - Kafka distributed streaming platform using confluent libraries
   # * postgresql        - PostgreSQL database
   enabled=[{{ if .ApplicationServer.Integration.Enabled|len }}"{{ end }}{{ range $index, $elm := .ApplicationServer.Integration.Enabled }}{{ if $index }}", "{{ end }}{{ $elm }}{{ end }}{{ if .ApplicationServer.Integration.Enabled|len }}"{{ end }}]
 

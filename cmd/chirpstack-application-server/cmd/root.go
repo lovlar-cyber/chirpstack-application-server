@@ -62,7 +62,7 @@ func init() {
 	viper.SetDefault("application_server.integration.postgresql.max_idle_connections", 2)
 	viper.SetDefault("application_server.integration.amqp.url", "amqp://guest:guest@localhost:5672")
 	viper.SetDefault("application_server.integration.amqp.event_routing_key_template", "application.{{ .ApplicationID }}.device.{{ .DevEUI }}.event.{{ .EventType }}")
-	viper.SetDefault("application_server.integration.enabled", []string{"mqtt"})
+	viper.SetDefault("application_server.integration.enabled", []string{"mqtt", "confluent_kafka"})
 	viper.SetDefault("application_server.codec.js.max_execution_time", 100*time.Millisecond)
 
 	viper.SetDefault("application_server.remote_multicast_setup.sync_interval", time.Second)
