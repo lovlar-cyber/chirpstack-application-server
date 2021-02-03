@@ -17,10 +17,10 @@ import (
 	"google.golang.org/grpc/codes"
 
 	pb "github.com/brocaar/chirpstack-api/go/v3/as/external/api"
-	"github.com/brocaar/chirpstack-application-server/internal/api/external/auth"
-	"github.com/brocaar/chirpstack-application-server/internal/api/helpers"
-	"github.com/brocaar/chirpstack-application-server/internal/codec"
-	"github.com/brocaar/chirpstack-application-server/internal/storage"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/api/external/auth"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/api/helpers"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/codec"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/storage"
 )
 
 // DeviceProfileServiceAPI exports the ServiceProfile related functions.

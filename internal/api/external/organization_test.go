@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 
 	pb "github.com/brocaar/chirpstack-api/go/v3/as/external/api"
-	"github.com/brocaar/chirpstack-application-server/internal/storage"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/storage"
 )
 
 func (ts *APITestSuite) TestOrganization() {

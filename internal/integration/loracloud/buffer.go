@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/brocaar/chirpstack-api/go/v3/gw"
-	"github.com/brocaar/chirpstack-application-server/internal/storage"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/storage"
 	"github.com/brocaar/lorawan"
 )
 

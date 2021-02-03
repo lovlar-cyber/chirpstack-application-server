@@ -7,7 +7,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
-	"github.com/brocaar/chirpstack-application-server/internal/backend/networkserver"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/backend/networkserver"
 	"github.com/brocaar/chirpstack-api/go/v3/ns"
 )
 

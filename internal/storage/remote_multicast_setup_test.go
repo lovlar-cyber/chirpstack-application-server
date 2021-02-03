@@ -8,8 +8,8 @@ import (
 	uuid "github.com/gofrs/uuid"
 	"github.com/stretchr/testify/require"
 
-	"github.com/brocaar/chirpstack-application-server/internal/backend/networkserver"
-	nsmock "github.com/brocaar/chirpstack-application-server/internal/backend/networkserver/mock"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/backend/networkserver"
+	nsmock "github.com/lovlar-cyber/chirpstack-application-server/internal/backend/networkserver/mock"
 	"github.com/brocaar/lorawan"
 )
 

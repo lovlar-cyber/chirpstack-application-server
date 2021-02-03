@@ -11,9 +11,9 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/brocaar/chirpstack-api/go/v3/ns"
-	"github.com/brocaar/chirpstack-application-server/internal/backend/networkserver"
-	"github.com/brocaar/chirpstack-application-server/internal/config"
-	"github.com/brocaar/chirpstack-application-server/internal/logging"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/backend/networkserver"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/config"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/logging"
 	"github.com/brocaar/lorawan"
 )
 

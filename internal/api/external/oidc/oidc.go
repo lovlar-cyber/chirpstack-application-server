@@ -15,7 +15,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 
-	"github.com/brocaar/chirpstack-application-server/internal/config"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/config"
 )
 
 var (

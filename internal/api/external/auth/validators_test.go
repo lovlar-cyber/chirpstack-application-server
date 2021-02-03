@@ -9,10 +9,10 @@ import (
 	"github.com/stretchr/testify/suite"
 	"golang.org/x/net/context"
 
-	"github.com/brocaar/chirpstack-application-server/internal/backend/networkserver"
-	"github.com/brocaar/chirpstack-application-server/internal/backend/networkserver/mock"
-	"github.com/brocaar/chirpstack-application-server/internal/storage"
-	"github.com/brocaar/chirpstack-application-server/internal/test"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/backend/networkserver"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/backend/networkserver/mock"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/storage"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/test"
 	"github.com/brocaar/lorawan"
 )
 

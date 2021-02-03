@@ -14,9 +14,9 @@ import (
 	"google.golang.org/grpc/codes"
 
 	"github.com/brocaar/chirpstack-api/go/v3/ns"
-	"github.com/brocaar/chirpstack-application-server/internal/backend/networkserver"
-	"github.com/brocaar/chirpstack-application-server/internal/codec"
-	"github.com/brocaar/chirpstack-application-server/internal/logging"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/backend/networkserver"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/codec"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/logging"
 )
 
 // DeviceProfile defines the device-profile.

@@ -23,12 +23,12 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	pb "github.com/brocaar/chirpstack-api/go/v3/as/external/api"
-	"github.com/brocaar/chirpstack-application-server/internal/api/external/auth"
-	"github.com/brocaar/chirpstack-application-server/internal/api/external/oidc"
-	"github.com/brocaar/chirpstack-application-server/internal/api/helpers"
-	"github.com/brocaar/chirpstack-application-server/internal/config"
-	"github.com/brocaar/chirpstack-application-server/internal/static"
-	"github.com/brocaar/chirpstack-application-server/internal/storage"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/api/external/auth"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/api/external/oidc"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/api/helpers"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/config"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/static"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/storage"
 )
 
 var (

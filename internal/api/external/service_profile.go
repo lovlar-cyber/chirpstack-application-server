@@ -12,9 +12,9 @@ import (
 
 	pb "github.com/brocaar/chirpstack-api/go/v3/as/external/api"
 	"github.com/brocaar/chirpstack-api/go/v3/ns"
-	"github.com/brocaar/chirpstack-application-server/internal/api/external/auth"
-	"github.com/brocaar/chirpstack-application-server/internal/api/helpers"
-	"github.com/brocaar/chirpstack-application-server/internal/storage"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/api/external/auth"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/api/helpers"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/storage"
 )
 
 // ServiceProfileServiceAPI export the ServiceProfile related functions.

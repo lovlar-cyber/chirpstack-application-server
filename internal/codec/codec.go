@@ -3,8 +3,8 @@ package codec
 import (
 	"fmt"
 
-	"github.com/brocaar/chirpstack-application-server/internal/codec/cayennelpp"
-	"github.com/brocaar/chirpstack-application-server/internal/codec/js"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/codec/cayennelpp"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/codec/js"
 	"github.com/lib/pq/hstore"
 )
 
