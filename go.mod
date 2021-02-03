@@ -1,4 +1,5 @@
 module github.com/brocaar/chirpstack-application-server
+module github.com/lovlar-cyber/chirpstack-application-server
 
 go 1.14
 

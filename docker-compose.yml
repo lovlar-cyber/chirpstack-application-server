@@ -5,6 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile-devel
     volumes:
+      #./:/lovlar_cas
       - ./:/chirpstack-application-server
       # - ../chirpstack-api:/chirpstack-api
     links:
