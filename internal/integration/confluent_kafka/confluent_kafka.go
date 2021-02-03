@@ -10,7 +10,8 @@ import (
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 
-	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
+	// "gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
+	"github.com/confluentinc/confluent-kafka-go"
 
 	pb "github.com/brocaar/chirpstack-api/go/v3/as/integration"
 	"github.com/lovlar-cyber/chirpstack-application-server/internal/config"
