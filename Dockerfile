@@ -14,6 +14,7 @@ WORKDIR $PROJECT_PATH
 
 RUN make dev-requirements ui-requirements
 RUN make
+RUN sudo make install
 
 FROM alpine:3.11.2 AS production
 
