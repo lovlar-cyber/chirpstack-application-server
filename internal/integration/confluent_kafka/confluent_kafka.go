@@ -11,8 +11,8 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	// "gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/edenhill/librdkafka"
+	kafka "github.com/confluentinc/confluent-kafka-go/kafka"
+	//"github.com/edenhill/librdkafka"
 
 	pb "github.com/brocaar/chirpstack-api/go/v3/as/integration"
 	"github.com/lovlar-cyber/chirpstack-application-server/internal/config"
