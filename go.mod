@@ -9,7 +9,7 @@ require (
 	github.com/brocaar/chirpstack-api/go/v3 v3.8.1
 	github.com/brocaar/lorawan v0.0.0-20200712153947-7a20fad6a6ed
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
-	github.com/confluentinc/confluent-kafka-go/kafka v1.5.2 // indirect
+	github.com/confluentinc/confluent-kafka-go/kafka 			
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/eclipse/paho.mqtt.golang v1.2.0
