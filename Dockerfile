@@ -2,7 +2,7 @@
 FROM golang as builder
 ARG MODULE
 # confluent platform
-RUN sudo apt-get update && sudo apt-get install confluent-platform-2.11
+RUN apt-get update && apt-get install confluent-platform-2.11
 # librdkafka Build from source
 RUN git clone https://github.com/edenhill/librdkafka.git
 WORKDIR librdkafka
