@@ -2,6 +2,8 @@
 FROM golang as builder
 ARG MODULE
 # confluent platform
+RUN wget -qO - http://packages.confluent.io/deb/3.1/archive.key | sudo apt-key add -
+RUN add-apt-repository "deb [arch=amd64] http://packages.confluent.io/deb/3.1 stable main"
 RUN apt-get update && apt-get install confluent-platform-2.11
 # librdkafka Build from source
 RUN git clone https://github.com/edenhill/librdkafka.git
