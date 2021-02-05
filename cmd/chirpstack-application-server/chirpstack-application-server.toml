@@ -222,9 +222,9 @@ id="6d5db27e-4ce2-4b2b-b5d7-91f069397978"
   # * azure_service_bus - Azure Service-Bus
   # * gcp_pub_sub       - Google Cloud Pub/Sub
   # * kafka             - Kafka distributed streaming platform
-  # * confluent_kafka             - Kafka distributed streaming platform using confluent libraries
+  # * confluentKafka             - Kafka distributed streaming platform using confluent libraries
   # * postgresql        - PostgreSQL database
-  enabled=["confluent_kafka"]
+  enabled=["confluentKafka"]
 
 
   # MQTT integration backend.
@@ -395,7 +395,7 @@ id="6d5db27e-4ce2-4b2b-b5d7-91f069397978"
   algorithm="SHA-512"
 
   # Confluent Kafka integration.
-  [application_server.integration.confluent_kafka]
+  [application_server.integration.confluentKafka]
   # Brokers, e.g.: localhost:9092.
   brokers=["localhost:9092"]
 

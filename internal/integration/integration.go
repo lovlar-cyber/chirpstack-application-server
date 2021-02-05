@@ -13,7 +13,7 @@ import (
 	"github.com/lovlar-cyber/chirpstack-application-server/internal/integration/amqp"
 	"github.com/lovlar-cyber/chirpstack-application-server/internal/integration/awssns"
 	"github.com/lovlar-cyber/chirpstack-application-server/internal/integration/azureservicebus"
-	"github.com/lovlar-cyber/chirpstack-application-server/internal/integration/confluent_kafka"
+	"github.com/lovlar-cyber/chirpstack-application-server/internal/integration/confluentKafka"
 	"github.com/lovlar-cyber/chirpstack-application-server/internal/integration/gcppubsub"
 	"github.com/lovlar-cyber/chirpstack-application-server/internal/integration/http"
 	"github.com/lovlar-cyber/chirpstack-application-server/internal/integration/influxdb"
@@ -89,8 +89,8 @@ func Setup(conf config.Config) error {
 			i, err = gcppubsub.New(marshalType, conf.ApplicationServer.Integration.GCPPubSub)
 		case "kafka":
 			i, err = kafka.New(marshalType, conf.ApplicationServer.Integration.Kafka)
-		case "confluent_kafka":
-			i, err = confluent_kafka.New(marshalType, conf.ApplicationServer.Integration.ConfluentKafka)
+		case "confluentKafka":
+			i, err = confluentKafka.New(marshalType, conf.ApplicationServer.Integration.ConfluentKafka)
 		case "postgresql":
 			i, err = postgresql.New(conf.ApplicationServer.Integration.PostgreSQL)
 		case "amqp":

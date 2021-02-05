@@ -63,7 +63,7 @@ type Config struct {
 			MQTT            IntegrationMQTTConfig           `mapstructure:"mqtt"`
 			GCPPubSub       IntegrationGCPConfig            `mapstructure:"gcp_pub_sub"`
 			Kafka           IntegrationKafkaConfig          `mapstructure:"kafka"`
-			ConfluentKafka  IntegrationConfluentKafkaConfig `mapstructure:"confluent_kafka"`
+			ConfluentKafka  IntegrationConfluentKafkaConfig `mapstructure:"confluentKafka"`
 			PostgreSQL      IntegrationPostgreSQLConfig     `mapstructure:"postgresql"`
 			AMQP            IntegrationAMQPConfig           `mapstructure:"amqp"`
 		} `mapstructure:"integration"`

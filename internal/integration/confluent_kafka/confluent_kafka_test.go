@@ -1,4 +1,4 @@
-package confluent_kafka
+package confluentKafka
 
 import (
 	"context"

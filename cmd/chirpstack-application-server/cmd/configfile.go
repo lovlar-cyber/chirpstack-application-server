@@ -234,7 +234,7 @@ id="{{ .ApplicationServer.ID }}"
   # * azure_service_bus - Azure Service-Bus
   # * gcp_pub_sub       - Google Cloud Pub/Sub
   # * kafka             - Kafka distributed streaming platform
-  # * confluent_kafka   - Kafka distributed streaming platform using confluent libraries
+  # * confluentKafka   - Kafka distributed streaming platform using confluent libraries
   # * postgresql        - PostgreSQL database
   enabled=[{{ if .ApplicationServer.Integration.Enabled|len }}"{{ end }}{{ range $index, $elm := .ApplicationServer.Integration.Enabled }}{{ if $index }}", "{{ end }}{{ $elm }}{{ end }}{{ if .ApplicationServer.Integration.Enabled|len }}"{{ end }}]
 
@@ -407,7 +407,7 @@ id="{{ .ApplicationServer.ID }}"
   algorithm="{{ .ApplicationServer.Integration.Kafka.Algorithm }}"
 
   # Confluent Kafka integration.
-  [application_server.integration.confluent_kafka]
+  [application_server.integration.confluentKafka]
   # Brokers, e.g.: localhost:9092.
   brokers=[{{ range $index, $broker := .ApplicationServer.Integration.ConfluentKafka.Brokers }}{{ if $index }}, {{ end }}"{{ $broker }}"{{ end }}]
 

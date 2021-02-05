@@ -1,4 +1,4 @@
-package confluent_kafka
+package confluentKafka
 
 import (
 	"bytes"
@@ -11,7 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	// "gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
-	kafka "github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	//"github.com/edenhill/librdkafka"
 
 	pb "github.com/brocaar/chirpstack-api/go/v3/as/integration"
@@ -63,11 +63,11 @@ func New(m marshaler.Type, conf config.IntegrationConfluentKafkaConfig) (*Integr
 	log.WithFields(log.Fields{
 		"brokers": conf.Brokers,
 		"topic":   conf.Topic,
-	}).Info("integration/confluent_kafka: connecting to kafka broker(s)")
+	}).Info("integration/confluentKafka: connecting to kafka broker(s)")
 
 	w, err := kafka.NewProducer(&wc)
 
-	log.Info("integration/confluent_kafka: connected to kafka broker(s)")
+	log.Info("integration/confluentKafka: connected to kafka broker(s)")
 
 	kt, err := template.New("key").Parse(conf.EventKeyTemplate)
 	if err != nil {
@@ -166,7 +166,7 @@ func (i *Integration) publish(ctx context.Context, applicationID uint64, devEUIB
 	log.WithFields(log.Fields{
 		"key":    string(key),
 		"ctx_id": ctx.Value(logging.ContextIDKey),
-	}).Info("integration/confluent_kafka: publishing message")
+	}).Info("integration/confluentKafka: publishing message")
 
 	if err := i.writer.Produce(&kmsg, deliveryChan); err != nil {
 		return errors.Wrap(err, "writing message to kafka")
